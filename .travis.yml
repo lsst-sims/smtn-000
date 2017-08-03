@@ -1,8 +1,20 @@
 sudo: false
 language: python
-python:
-      - 3.4
-install: "pip install -r requirements.txt"
-script: "make html"
-notifications:
-      email: false
+matrix:
+  include:
+    - python: "3.5"
+      env: LTD_MASON_BUILD=true
+install:
+  - pip install -r requirements.txt
+  - pip install "ltd-mason>=0.2,<0.3"
+script:
+  - sphinx-build -b html -a -n -d _build/doctree . _build/html
+after_success:
+  - ltd-mason-travis --html-dir _build/html
+env:
+  global:
+    - LTD_MASON_BUILD=false  # disable builds in regular text matrix
+    - LTD_MASON_PRODUCT="smtn-000"
+    # Add AWS and LTD Keeper credentials as encrypted secrets here
+    - secure: "GYGl67VHP6Ntyfn3mKb3m00mEtfGNFLlzuxI1FQ+ueg2peH//OuFvEK883kneFC32PWDkmEYG/8vPL9B8rvauyumd0GNRb6YY011e/2ayYZtcYsx3WCs3VjgWy7vlD+eB/VcWK5RScKNGv5vhJd9CUik9agHCV7L2MILJ8YLQ4TJEWdAO3MxB62GTEl/2lS7md+2txPxFov9FQrAsB1/ZxXlQptAhgUS1ZTHQsxdzAUf1qUDH3ZlYW31z/zHQl8dZVlS+cw2NN7uN8OFO6LsqmXjDGjLF89jFIlWBRvXHEQCcv7KqPLqM8eaVAlM77enkWPblvEZFnB+EVSiXkoDhcVdXI6tJB6tEYpL163/bzho4wEoNANyv1JPywDRWFrWeq6twAgPB1DwKgAeKNi7jpSS7p29dmKH/KlpQdsgXiE4EDnW2WnOPP0+WQy0LS+b+J9J+xvzYpig2twpUOJNqavQctuaUNXs+OVM57eWLi/qN9XCUIFSgShmerjKQ1ci5LoTmjynMmK2YnH2Z6Ijy7GDNmWggCg8fmXRXjxzV5p4IFhmcjMef8n1FKGUE77eaO5znw4q4ckaiKTM75DSYEUks9JEm8mcfBMwui1JwoAgrn90scR3V0I7QAWqbjaBTzMj5zqkOI5UCNVGOHS383oOdoi+R2poD/r29KPVDSs="
+    - secure: "Q8JR+bvWzGuQWbKIUCrNfD0L0uFXTMZBzf1xe9r4wAjp/OzzRFLj7KSnM0bnWBgUOoJ1SL72WEjyG3AdCNdU1wfBTz/mkq/08Y0Pdw1nAduDepdTyEQjTKdNAykLXacrHdlmtIuJehZG+joAgvNG5bbZcgESYOpp4TO2mPHZm79qosqX6acH03nZ9JCmKJBAHCYYoYppF5ea+aPtFS4mP+QXy8uGaclvgjMG7H3cHJQ0u/ig6mMgAcL8ovKJyvA97LPuP26GboUqDenq2kRaoDwlvcFVIJzlu+mZcBO6W/Sdy2uLQmRvOl28eszTBqE17+WWY/NzFw5lluhjq+qmwA6+vvYUfnrsTgapfXrDEH14G/dEUrx6zG9F+5dG7oB44SHAOoWNe3nvkiChrEuzpZ701C8UYqMMx5oLCvcaMK5t+onf/cf+eU90twGu0gA04noNbkm5L2R+UYtIf1FSrY76/lFbzBlPkpDYEPPCVqL+n6kH5EvlGBybTwtYVqtsmkEtdTdDYtTi20/h+/1roYhCKpE/qns1b/v0VVYBIYwxW1CR3lFPSn/JcPBTuyH5nRwzKFLB/k/4yn+UPtjFgyrYGBPzNf5xo+vIgx5Pt6dusWOYDJhUHARicRz80hP7Z9XVjDGA7iCRlEw14avCVjo0lvud7tJf8SJ4wjf3ZKg="
